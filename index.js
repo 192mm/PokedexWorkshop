@@ -1,52 +1,27 @@
+const bodyParser = require ('body-parser');
+const morgan = require('morgan');
 const express = require('express');
 const app = express();
-const {pokemon} = require('./pokedex.json');
+const pokemon = require('./routes/pokemon')
 
+app.use(morgan('dev'));
+app.use(express.json());
+app.use(express.urlencoded({extended:true}));
 /*
 Verbos HTTP
-GET
-POST
-PATCH
-PUT
-DELETE
+GET - Obtiene recursos
+POST - Crea/Almacena recursos
+PATCH - Modificar una parte de un recurso
+PUT - Modifica un recurso completo
+DELETE - Borrar un recurso
 */
-app.get("/",(req,res,next) =>{
-    res.status(200);
+app.get("/", (req, res, next) => {
+    res.status(200); // Puede usarse res.status(200).send("Bienvenido al Pokedex");
     res.send("Bienvenido al Pokedex");
 });
-/// para poner variables se usan ':'
-app.get('/pokemon/all',(req, res, next) =>{
-    res.status(200);
-    res.send(pokemon);
-})
 
-app.get('/pokemon/:id([0-9]{1,3})',(req, res, next) => {
-    const id = req.params.id - 1;
-    if( id >= 0 && id <= 150)
-    {
-        res.status(200);
-        res.send(pokemon[req.params.id - 1]);
-    }
-    else{
-        res.status(404);
-        res.send("Pokemon no encontrado");
-    }
-})
+app.use("/pokemon",pokemon);
 
-app.get('/pokemon/:name',(req,res,next)=>{
-    const name = req.params.name;
-    for(i = 0; i < pokemon.length; i++ )
-    {
-        if (pokemon[i].name == name )
-        {
-            res.status(200);
-            res.send(pokemon[i]);
-        }
-    }
-    res.status(404);
-    res.send("Pokemon no encontrado")
-})
-
-app.listen(process.env.PORT || 3000, () =>{
-    console.log ('server is running');
+app.listen(process.env.PORT || 3000, () => {
+    console.log('server is running');
 });
