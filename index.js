@@ -1,4 +1,4 @@
-const bodyParser = require ('body-parser');
+//const bodyParser = require ('body-parser');
 const morgan = require('morgan');
 const express = require('express');
 const app = express();
@@ -17,10 +17,14 @@ DELETE - Borrar un recurso
 */
 app.get("/", (req, res, next) => {
     res.status(200); // Puede usarse res.status(200).send("Bienvenido al Pokedex");
-    res.send("Bienvenido al Pokedex");
+    res.json({code: 1, message: "Bienvenido al pokedex"});
 });
 
 app.use("/pokemon",pokemon);
+
+app.use((req, res, next) => {
+    return res.status(404).send({code: 404, message:  "URL no encontrada"});
+});
 
 app.listen(process.env.PORT || 3000, () => {
     console.log('server is running');

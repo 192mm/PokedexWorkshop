@@ -4,12 +4,12 @@ const db = require('../config/database');
 
 
 pokemon.post("/",(req,res,next) =>{
-    return res.status(200).send(req.body);
+    return res.status(200).json(req.body);
 })
 
 pokemon.get('/', async (req, res, next) => {
     const pkmn = await db.query("SELECT * FROM pokemon");
-    res.status(200).json(pkmn);
+    res.status(200).json({code: 1, message: pkmn});
 })
 
 /// para poner variables se usan ':'
@@ -17,11 +17,10 @@ pokemon.get('/:id([0-9]{1,3})', async (req, res, next) => {
     const id = req.params.id;
     if (id > 0 && id <= 722) {
         const pkmn = await db.query("SELECT * FROM pokemon WHERE pok_id = " + id)
-        res.status(200).json(pkmn);
+        res.status(200).json({code: 1, message: pkmn});
     }
     else {
-        res.status(404);
-        res.send("Pokemon no encontrado");
+        res.status(404).res.send({code: 404, message: "Pokemoon no encontrado"});
     }
 })
 // Expresiones regulares AKA REGEX: ([0-9]{1,3}) y ([A-Za-z]) etc...
@@ -54,7 +53,7 @@ pokemon.get('/:name([A-Za-z]+)', async (req, res, next) => {
         return res.status(200).send(pk);
     }
     return res.status(404).send("Pokemon no encontrado")*/
-    (pk.length > 0) ? res.status(200).send(pk) : res.status(404).send("Pokemon no encontrado");
+    (pk.length > 0) ? res.status(200).json({code: 1, message: pk}) : res.status(404).send({code:404, message:"Pokemon no encontrado"});
 })
 
 module.exports = pokemon; //la más sencilla de usar. Solo permite exportar una cosa
