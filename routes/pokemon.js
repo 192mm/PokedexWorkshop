@@ -41,7 +41,7 @@ pokemon.put("/:id([0-9]{1,3})", async (req, res, next) => {
     const { pok_name, pok_height, pok_weight, pok_base_experience } = req.body;
 
     if (pok_name && pok_height && pok_weight && pok_base_experience) {
-        let query = `UPDATE pokemon SET pok_name=${pok_name}, pok_height=${pok_height},`;
+        let query = `UPDATE pokemon SET pok_name='${pok_name}', pok_height=${pok_height},`;
         query += `pok_weight=${pok_weight}, pok_base_experience = ${pok_base_experience} WHERE pok_id=${req.params.id}; `;
 
         const rows = await db.query(query);
@@ -68,6 +68,7 @@ pokemon.patch("/:id([0-9]{1,3})", async (req, res, next) => {
         }
         return res.status(500).json({code: 500, message: "Ocurrió un error"})
     }
+    return res.status(500).json({code: 500, message: "Campos incompletos"})
 })
 
 pokemon.get('/', async (req, res, next) => {
